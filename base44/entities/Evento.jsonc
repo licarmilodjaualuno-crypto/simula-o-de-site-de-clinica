@@ -1,0 +1,18 @@
+{
+  "type": "object",
+  "properties": {
+    "titulo": {"type": "string"},
+    "data_rotulo": {"type": "string"},
+    "ano": {"type": "number"},
+    "era_id": {"type": "string"},
+    "era_nome": {"type": "string"},
+    "resumo": {"type": "string"},
+    "texto": {"type": "string"},
+    "local": {"type": "string"},
+    "destaque": {"type": "boolean"},
+    "imagem_url": {"type": ["string", "null"]},
+    "arquivado": {"type": "boolean", "default": false}
+  },
+  "required": [],
+  "name": "Evento"
+}

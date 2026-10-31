@@ -1,0 +1,14 @@
+{
+  "name": "Tema",
+  "type": "object",
+  "properties": {
+    "titulo": {"type": "string"},
+    "categoria": {"type": "string"},
+    "resumo": {"type": "string"},
+    "conteudo": {"type": "string"},
+    "citacao": {"type": "string"},
+    "ordem": {"type": "number"},
+    "imagem_url": {"type": "string"}
+  },
+  "required": ["titulo", "categoria", "conteudo"]
+}

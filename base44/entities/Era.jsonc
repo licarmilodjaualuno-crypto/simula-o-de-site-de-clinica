@@ -1,0 +1,38 @@
+{
+  "name": "Era",
+  "type": "object",
+  "properties": {
+    "nome": {
+      "type": "string"
+    },
+    "periodo": {
+      "type": "string"
+    },
+    "resumo": {
+      "type": "string"
+    },
+    "descricao": {
+      "type": "string"
+    },
+    "ordem": {
+      "type": "number"
+    },
+    "tom": {
+      "type": "string",
+      "enum": [
+        "ocre",
+        "azul",
+        "verde",
+        "vermelho"
+      ]
+    },
+    "imagem_url": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "nome",
+    "periodo",
+    "ordem"
+  ]
+}

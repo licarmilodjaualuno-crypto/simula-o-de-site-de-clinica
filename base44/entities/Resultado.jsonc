@@ -1,0 +1,12 @@
+{
+  "name": "Resultado",
+  "type": "object",
+  "properties": {
+    "categoria": {"type": "string"},
+    "acertos": {"type": "number"},
+    "total": {"type": "number"},
+    "email_utilizador": {"type": "string"},
+    "nome_utilizador": {"type": "string"}
+  },
+  "required": ["categoria", "acertos", "total"]
+}

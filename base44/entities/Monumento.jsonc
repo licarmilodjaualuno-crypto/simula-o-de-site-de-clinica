@@ -1,0 +1,15 @@
+{
+  "name": "Monumento",
+  "type": "object",
+  "properties": {
+    "nome": {"type": "string"},
+    "cidade": {"type": "string"},
+    "tipo": {"type": "string"},
+    "periodo": {"type": "string"},
+    "resumo": {"type": "string"},
+    "descricao": {"type": "string"},
+    "imagem_url": {"type": "string"},
+    "ordem": {"type": "number"}
+  },
+  "required": ["nome", "cidade", "tipo", "descricao"]
+}

@@ -1,0 +1,13 @@
+{
+  "name": "GrupoAnimal",
+  "type": "object",
+  "properties": {
+    "nome": {"type": "string"},
+    "slug": {"type": "string"},
+    "resumo": {"type": "string"},
+    "descricao": {"type": "string"},
+    "imagem_url": {"type": "string"},
+    "ordem": {"type": "number"}
+  },
+  "required": ["nome", "slug", "descricao"]
+}

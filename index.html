@@ -1,170 +1,24 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Viraliza AI Studio — editor e gerador de vídeos com IA.">
-  <title>Viraliza AI Studio</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Manrope:wght@700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-  <div class="app-shell">
-    <aside class="sidebar">
-      <a class="logo" href="index.html" aria-label="Viraliza AI Studio">
-        <span class="logo-mark">V</span>
-        <span><strong>Viraliza</strong><small>AI Studio</small></span>
-      </a>
-
-      <nav class="side-nav" aria-label="Navegação principal">
-        <button class="nav-item active" data-panel="studio"><span>✦</span>Gerar vídeo</button>
-        <button class="nav-item" data-panel="projects"><span>▦</span>Projetos</button>
-        <button class="nav-item" data-panel="library"><span>▶</span>Biblioteca</button>
-        <button class="nav-item" data-panel="settings"><span>⚙</span>Configurações</button>
-      </nav>
-
-      <div class="engine-card">
-        <div class="engine-line"><span class="status-dot" id="engine-dot"></span><strong id="engine-label">Motor local offline</strong></div>
-        <small id="engine-detail">Conecte o gerador instalado no seu PC.</small>
-        <button id="quick-connect" class="text-button">Testar conexão</button>
-      </div>
-
-      <div class="sidebar-foot">V1 • interface inicial</div>
-    </aside>
-
-    <main class="main-area">
-      <header class="topbar">
-        <div>
-          <p class="kicker">CRIAÇÃO DE VÍDEO COM IA</p>
-          <h1 id="page-title">Gerar vídeo</h1>
-        </div>
-        <div class="top-actions">
-          <span class="save-state" id="save-state">Projeto salvo localmente</span>
-          <button class="icon-button" id="new-project" title="Novo projeto">＋</button>
-        </div>
-      </header>
-
-      <section class="panel active" id="panel-studio">
-        <div class="workspace-grid">
-          <section class="preview-card card-surface">
-            <div class="card-head">
-              <div>
-                <span class="badge">PREVIEW</span>
-                <h2>Seu vídeo</h2>
-              </div>
-              <div class="ratio-pill" id="ratio-pill">9:16</div>
-            </div>
-
-            <div class="preview-stage" id="preview-stage">
-              <video id="preview-video" controls playsinline></video>
-              <div class="empty-preview" id="empty-preview">
-                <div class="play-orb">▶</div>
-                <strong>Nenhum vídeo carregado</strong>
-                <span>Envie uma referência ou gere uma nova cena.</span>
-              </div>
-            </div>
-
-            <div class="timeline">
-              <div class="timeline-head"><span>Timeline</span><span id="duration-display">00:15</span></div>
-              <div class="track"><div class="clip" id="timeline-clip"><span>PARTE 1</span><i></i></div></div>
-            </div>
-          </section>
-
-          <section class="creator-card card-surface">
-            <div class="card-head">
-              <div>
-                <span class="badge purple">ASSISTENTE</span>
-                <h2>Crie por conversa</h2>
-              </div>
-              <span class="ai-chip">IA</span>
-            </div>
-
-            <label class="field-label" for="idea">O que você quer gerar?</label>
-            <textarea id="idea" rows="4" placeholder="Ex.: Continue a Parte 1. Mantenha o mesmo personagem, a mesma roupa e a mesma casa. A porta começa a abrir lentamente..."></textarea>
-
-            <div class="quick-prompts">
-              <button data-prompt="Continue o vídeo a partir do último segundo, mantendo o mesmo personagem, roupa, cenário e iluminação.">Continuar vídeo</button>
-              <button data-prompt="Crie uma cena cinematográfica de suspense, realista, com movimento natural e continuidade visual.">Suspense</button>
-              <button data-prompt="Transforme esta referência em um vídeo vertical para TikTok, com enquadramento 9:16 e ritmo forte.">TikTok 9:16</button>
-            </div>
-
-            <div class="divider"></div>
-
-            <div class="upload-zone" id="upload-zone">
-              <input type="file" id="reference-file" accept="video/*,image/*" hidden>
-              <div class="upload-icon">↑</div>
-              <div><strong>Referência</strong><span id="file-name">Vídeo ou imagem da parte anterior</span></div>
-              <button id="choose-file" class="secondary-button">Escolher arquivo</button>
-            </div>
-
-            <div class="controls-grid">
-              <label>Modo
-                <select id="mode">
-                  <option value="video-to-video">Continuar vídeo</option>
-                  <option value="image-to-video">Imagem → vídeo</option>
-                  <option value="text-to-video">Texto → vídeo</option>
-                </select>
-              </label>
-              <label>Duração
-                <select id="duration">
-                  <option value="5">5 segundos</option>
-                  <option value="10">10 segundos</option>
-                  <option value="15" selected>15 segundos</option>
-                </select>
-              </label>
-              <label>Formato
-                <select id="ratio">
-                  <option value="9:16" selected>9:16 TikTok</option>
-                  <option value="16:9">16:9 YouTube</option>
-                  <option value="1:1">1:1 Quadrado</option>
-                </select>
-              </label>
-              <label>Qualidade
-                <select id="quality">
-                  <option value="draft">Rascunho rápido</option>
-                  <option value="balanced" selected>Equilibrado</option>
-                  <option value="high">Alta qualidade</option>
-                </select>
-              </label>
-            </div>
-
-            <label class="toggle-row"><input type="checkbox" id="continuity" checked><span></span><div><strong>Manter continuidade</strong><small>Priorizar personagem, roupa, cenário e iluminação anteriores.</small></div></label>
-
-            <button class="generate-button" id="generate-video"><span>✦</span><div><strong>Gerar vídeo</strong><small id="generate-subtitle">Usará o motor gratuito do seu computador</small></div><b>→</b></button>
-            <div class="generation-status" id="generation-status" aria-live="polite"></div>
-          </section>
-        </div>
-
-        <section class="flow-card card-surface">
-          <div class="flow-copy"><span class="badge">AUTOMAÇÃO</span><h2>Como o Viraliza vai trabalhar</h2><p>Quando o motor local estiver conectado, o sistema recebe seu pedido, usa a referência, gera o vídeo no seu PC e devolve o MP4 para o projeto.</p></div>
-          <div class="flow-steps">
-            <div><b>1</b><span>Pedido</span></div><i>→</i><div><b>2</b><span>Prompt</span></div><i>→</i><div><b>3</b><span>Referência</span></div><i>→</i><div><b>4</b><span>Gerar</span></div><i>→</i><div><b>5</b><span>MP4</span></div>
-          </div>
-        </section>
-      </section>
-
-      <section class="panel" id="panel-projects">
-        <div class="empty-page card-surface"><span class="big-icon">▦</span><h2>Projetos</h2><p>Seus episódios e séries aparecerão aqui. A V1 já salva as configurações do projeto neste navegador.</p><button class="primary-small go-studio">Criar primeiro projeto</button></div>
-      </section>
-
-      <section class="panel" id="panel-library">
-        <div class="empty-page card-surface"><span class="big-icon">▶</span><h2>Biblioteca</h2><p>Os vídeos gerados pelo motor local serão exibidos aqui para visualizar e continuar.</p><button class="primary-small go-studio">Ir para geração</button></div>
-      </section>
-
-      <section class="panel" id="panel-settings">
-        <div class="settings-card card-surface">
-          <span class="badge">CONEXÃO</span><h2>Motor de geração</h2><p>O site está pronto para conversar com um serviço local no seu PC. Na próxima etapa vamos instalar o gerador gratuito e ligar os dois.</p>
-          <label class="field-label" for="engine-url">Endereço do motor local</label>
-          <div class="url-row"><input id="engine-url" value="http://127.0.0.1:8787"><button id="connect-engine" class="primary-small">Conectar</button></div>
-          <div class="connection-result" id="connection-result">Ainda não testado.</div>
-          <div class="settings-note"><strong>Importante</strong><span>Nenhuma chave paga foi configurada nesta versão. O objetivo é usar processamento local sempre que o seu computador suportar.</span></div>
-        </div>
-      </section>
-    </main>
-  </div>
-
-  <script src="script.js"></script>
-</body>
+<!doctype html>
+<html lang="pt">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#FDF9F3" />
+    <meta
+      name="description"
+      content="Memória Viva — a história da Guiné-Bissau: os reinos antigos, a colonização, a luta de libertação, a independência e o país de hoje, em linha do tempo, temas e questionários."
+    />
+    <meta property="og:title" content="Memória Viva — História da Guiné-Bissau" />
+    <meta
+      property="og:description"
+      content="Do império de Kaabu à Guiné-Bissau de hoje: linha do tempo, enciclopédia temática e questionários de estudo."
+    />
+    <meta property="og:type" content="website" />
+    <title>Memória Viva — História da Guiné-Bissau</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
 </html>

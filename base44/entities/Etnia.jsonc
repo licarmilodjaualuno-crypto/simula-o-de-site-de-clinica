@@ -1,0 +1,16 @@
+{
+  "name": "Etnia",
+  "type": "object",
+  "properties": {
+    "nome": {"type": "string"},
+    "regiao": {"type": "string"},
+    "lingua": {"type": "string"},
+    "lingua_franca": {"type": "string"},
+    "resumo": {"type": "string"},
+    "cultura": {"type": "string"},
+    "costumes": {"type": "string"},
+    "imagem_url": {"type": "string"},
+    "ordem": {"type": "number"}
+  },
+  "required": ["nome", "regiao", "lingua", "cultura", "costumes"]
+}

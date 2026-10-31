@@ -1,0 +1,13 @@
+{
+  "name": "Pergunta",
+  "type": "object",
+  "properties": {
+    "pergunta": {"type": "string"},
+    "opcoes": {"type": "array", "items": {"type": "string"}},
+    "correta": {"type": "number"},
+    "explicacao": {"type": "string"},
+    "categoria": {"type": "string"},
+    "ordem": {"type": "number"}
+  },
+  "required": ["pergunta", "opcoes", "correta", "categoria"]
+}

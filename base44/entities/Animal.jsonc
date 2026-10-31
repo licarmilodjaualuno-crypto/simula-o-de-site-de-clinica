@@ -1,0 +1,19 @@
+{
+  "name": "Animal",
+  "type": "object",
+  "properties": {
+    "nome": {"type": "string"},
+    "nome_cientifico": {"type": "string"},
+    "grupo_nome": {"type": "string"},
+    "grupo_slug": {"type": "string"},
+    "habitat": {"type": "string"},
+    "alimentacao": {"type": "string"},
+    "descricao": {"type": "string"},
+    "curiosidades": {"type": "string"},
+    "conservacao": {"type": "string"},
+    "imagens": {"type": "array","items": {"type": "string"}},
+    "video_url": {"type": "string"},
+    "ordem": {"type": "number"}
+  },
+  "required": ["nome","grupo_nome","grupo_slug","descricao"]
+}

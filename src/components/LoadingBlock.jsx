@@ -1,0 +1,2 @@
+import React from "react";
+export default function LoadingBlock({ label = "A carregar" }) { return <div className="flex min-h-[50vh] flex-col items-center justify-center gap-4"><span className="h-7 w-7 animate-spin rounded-full border-2 border-border border-t-primary" /><p className="text-sm text-muted-foreground">{label}</p></div>; }
