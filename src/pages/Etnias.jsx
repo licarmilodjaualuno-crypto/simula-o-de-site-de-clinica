@@ -1,14 +1,71 @@
-import React,{useMemo,useState}from"react";
-import{Input}from"@/components/ui/input";
+import React, { useMemo, useState } from "react";
+import { base44 } from "@/api/base44Client";
+import EtniaCard from "@/components/EtniaCard";
+import LoadingBlock from "@/components/LoadingBlock";
+import { Input } from "@/components/ui/input";
 
-const povos=[
- {nome:"Balanta",regiao:"Diversas regiões, com forte presença no centro e sul",lingua:"Balanta",resumo:"Um dos maiores grupos do país. Muitas comunidades balantas têm forte tradição agrícola, especialmente ligada ao cultivo do arroz, além de estruturas comunitárias próprias e rituais de passagem."},
- {nome:"Fula",regiao:"Leste e outras regiões",lingua:"Fula / Pulaar",resumo:"As comunidades fulas estão presentes em várias partes da África Ocidental. Na Guiné-Bissau, mantêm tradições ligadas à religião islâmica, comércio, criação de animais e agricultura."},
- {nome:"Mandinga",regiao:"Leste e nordeste",lingua:"Mandinga",resumo:"Os mandingas fazem parte de uma ampla tradição histórica da África Ocidental, ligada a redes comerciais, cultura islâmica, música, oralidade e sistemas familiares extensos."},
- {nome:"Manjaco",regiao:"Norte, especialmente Cacheu e zonas próximas",lingua:"Manjaco",resumo:"As comunidades manjacas são conhecidas por tradições agrícolas, práticas rituais, organização familiar e produção cultural própria, incluindo tecidos, esculturas e cerimónias comunitárias."},
- {nome:"Papel",regiao:"Bissau e Biombo",lingua:"Papel",resumo:"O povo Papel tem forte presença na região de Bissau e Biombo. As suas tradições incluem sistemas de linhagem, práticas agrícolas, cerimónias e uma relação histórica profunda com o território."},
- {nome:"Bijagó",regiao:"Arquipélago dos Bijagós",lingua:"Bijagó",resumo:"Os bijagós vivem em várias ilhas do arquipélago. Mantêm tradições ligadas ao mar, à agricultura, à organização por idade, a cerimónias e a espaços de grande importância espiritual e ecológica."},
- {nome:"Mancanha",regiao:"Norte e centro",lingua:"Mancanha",resumo:"As comunidades mancanhas mantêm tradições linguísticas, agrícolas e familiares próprias, com importantes práticas cerimoniais e redes de parentesco."},
- {nome:"Beafada",regiao:"Sul e leste",lingua:"Beafada",resumo:"Os beafadas estão historicamente ligados a diferentes zonas do sul e leste. A agricultura, a religião, a família e as relações comunitárias marcam a vida social."}
-];
-export default function Etnias(){const[busca,setBusca]=useState("");const visiveis=useMemo(()=>povos.filter(p=>`${p.nome} ${p.regiao} ${p.lingua} ${p.resumo}`.toLowerCase().includes(busca.toLowerCase())),[busca]);return <div className="mx-auto max-w-6xl px-5 py-14 sm:py-20"><header className="max-w-2xl"><p className="text-[11px] font-medium uppercase tracking-[0.28em] text-primary">Povos e etnias</p><h1 className="mt-4 font-heading text-4xl font-semibold sm:text-5xl">Povos da Guiné-Bissau</h1><p className="mt-5 leading-relaxed text-foreground/70">Uma introdução às comunidades que formam a diversidade humana, linguística e cultural do país.</p></header><div className="mt-9 max-w-md"><Input value={busca} onChange={e=>setBusca(e.target.value)} placeholder="Procurar povo, região ou língua"/></div><p className="mt-7 text-sm text-muted-foreground">{visiveis.length} povos nesta versão</p><div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">{visiveis.map(p=><article key={p.nome} className="rounded-2xl border border-border bg-card p-6"><h2 className="font-heading text-2xl font-semibold">{p.nome}</h2><p className="mt-2 text-sm font-medium text-primary">{p.lingua}</p><p className="mt-2 text-sm text-foreground/60">{p.regiao}</p><p className="mt-4 text-sm leading-6 text-foreground/75">{p.resumo}</p></article>)}</div></div>}
+export default function Etnias() {
+  const [etnias, setEtnias] = React.useState(null);
+  const [busca, setBusca] = useState("");
+
+  React.useEffect(() => {
+    let ativo = true;
+    base44.entities.Etnia.list("ordem", 100).then((lista) => {
+      if (ativo) setEtnias(lista);
+    });
+    return () => {
+      ativo = false;
+    };
+  }, []);
+
+  const visiveis = useMemo(() => {
+    if (!etnias) return [];
+    const termo = busca.trim().toLowerCase();
+    if (!termo) return etnias;
+    return etnias.filter((etnia) =>
+      `${etnia.nome} ${etnia.regiao || ""} ${etnia.lingua || ""} ${etnia.resumo || ""}`
+        .toLowerCase()
+        .includes(termo)
+    );
+  }, [etnias, busca]);
+
+  if (!etnias) return <LoadingBlock label="A abrir os povos" />;
+
+  return (
+    <div className="mx-auto max-w-6xl px-5 py-14 sm:py-20">
+      <header className="max-w-2xl">
+        <p className="text-[11px] font-medium uppercase tracking-[0.28em] text-primary">Povos e etnias</p>
+        <h1 className="mt-4 text-balance font-heading text-4xl font-semibold leading-tight sm:text-5xl">
+          Todos os povos da Guiné-Bissau
+        </h1>
+        <p className="mt-5 leading-relaxed text-foreground/70">
+          Balantas, fulas, mandingas, manjacos, papéis, bijagós e tantas outras comunidades. Para
+          cada povo: a região que habita, a língua que fala, a cultura, as práticas e os costumes.
+        </p>
+      </header>
+
+      <div className="relative mt-9 max-w-md">
+        <Input
+          value={busca}
+          onChange={(evento) => setBusca(evento.target.value)}
+          placeholder="Procurar um povo, região ou língua"
+          className="h-11 text-[15px]"
+        />
+      </div>
+
+      <p className="mt-8 text-sm text-muted-foreground">
+        {visiveis.length} {visiveis.length === 1 ? "povo" : "povos"}
+      </p>
+
+      {visiveis.length === 0 ? (
+        <p className="mt-12 text-center text-foreground/60">Nenhum povo encontrado. Tente outra palavra.</p>
+      ) : (
+        <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {visiveis.map((etnia) => (
+            <EtniaCard key={etnia.id} etnia={etnia} />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
