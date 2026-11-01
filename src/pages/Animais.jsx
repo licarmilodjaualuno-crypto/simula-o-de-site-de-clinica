@@ -1,13 +1,97 @@
-import React from "react";
-import{PawPrint}from"lucide-react";
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { ArrowRight, PawPrint } from "lucide-react";
+import { base44 } from "@/api/base44Client";
+import { Image } from "@/components/ui/image";
+import LoadingBlock from "@/components/LoadingBlock";
 
-const grupos=[
- {nome:"Mamíferos",resumo:"Primatas, morcegos, roedores, antílopes, carnívoros, cetáceos e outros mamíferos presentes no território e nas águas da Guiné-Bissau."},
- {nome:"Aves",resumo:"A diversidade de habitats costeiros, florestais, agrícolas e insulares sustenta numerosas aves residentes e migratórias."},
- {nome:"Répteis",resumo:"Crocodilos, tartarugas, lagartos e serpentes fazem parte da fauna terrestre, costeira e marinha do país."},
- {nome:"Anfíbios",resumo:"Sapos e rãs ocupam áreas húmidas, arrozais, matas e zonas sazonais, respondendo rapidamente às mudanças ambientais."},
- {nome:"Peixes",resumo:"Rios, estuários, mangais e o oceano sustentam espécies de grande importância ecológica, alimentar e económica."},
- {nome:"Vida marinha",resumo:"Tartarugas marinhas, golfinhos, peixes, moluscos e outros organismos encontram abrigo em águas costeiras e no Arquipélago dos Bijagós."},
- {nome:"Invertebrados",resumo:"Insetos, crustáceos, aracnídeos, moluscos e muitos outros grupos cumprem funções essenciais nos ecossistemas."}
-];
-export default function Animais(){return <div><section className="border-b border-border bg-muted/50"><div className="mx-auto max-w-6xl px-5 py-16 sm:py-20"><p className="eyebrow flex items-center gap-2.5"><span className="h-px w-7 bg-gold"/>Fauna</p><h1 className="mt-4 max-w-3xl font-heading text-[38px] font-semibold leading-[1.08] sm:text-[52px]">A fauna da Guiné-Bissau</h1><p className="mt-5 max-w-2xl leading-relaxed text-foreground/70">Uma visão geral dos principais grupos de animais encontrados no país, nas florestas, savanas, mangais, rios, ilhas e águas costeiras.</p></div></section><section className="mx-auto max-w-6xl px-5 py-14"><div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">{grupos.map(g=><article key={g.nome} className="rounded-2xl border border-border bg-card p-6"><div className="flex h-11 w-11 items-center justify-center rounded-full bg-primary/10"><PawPrint className="h-5 w-5 text-primary"/></div><h2 className="mt-5 font-heading text-2xl font-semibold">{g.nome}</h2><p className="mt-3 text-sm leading-6 text-foreground/70">{g.resumo}</p></article>)}</div><div className="mt-12 rounded-2xl border border-border bg-muted/40 p-6"><h2 className="font-heading text-2xl font-semibold">Mamíferos selvagens e domésticos</h2><p className="mt-3 leading-7 text-foreground/70">A seção de mamíferos será dividida em dois caminhos: selvagens e domésticos. As fichas completas serão construídas aqui no GitHub com alimentação, habitat, comportamento, reprodução, criação, importância cultural e outras informações, sem depender da Base44.</p></div></section></div>}
+export default function Animais() {
+  const [dados, setDados] = useState(null);
+
+  useEffect(() => {
+    let ativo = true;
+
+    const carregar = async () => {
+      const [grupos, contagens] = await Promise.all([
+        base44.entities.GrupoAnimal.list("ordem", 20),
+        base44.entities.Animal.aggregate({ groupBy: "grupo_slug" }),
+      ]);
+      if (!ativo) return;
+      const mapa = {};
+      (contagens?.rows || []).forEach((linha) => {
+        mapa[linha.grupo_slug] = linha.count;
+      });
+      setDados({ grupos, mapa });
+    };
+
+    carregar();
+    return () => {
+      ativo = false;
+    };
+  }, []);
+
+  if (!dados) return <LoadingBlock label="A abrir a fauna da Guiné-Bissau" />;
+
+  return (
+    <div>
+      <section className="border-b border-border bg-muted/50">
+        <div className="mx-auto max-w-6xl px-5 py-16 sm:py-20">
+          <p className="eyebrow flex items-center gap-2.5">
+            <span className="h-px w-7 bg-gold" aria-hidden="true" />
+            Fauna
+          </p>
+          <h1 className="mt-4 max-w-3xl text-balance font-heading text-[38px] font-semibold leading-[1.08] sm:text-[52px]">
+            Os animais da Guiné-Bissau, grupo a grupo
+          </h1>
+          <p className="mt-5 max-w-2xl leading-relaxed text-foreground/70">
+            Escolhe um grupo — mamíferos, aves, répteis, anfíbios, peixes, vida marinha ou
+            invertebrados — para ver todas as espécies do país, com fotografias, vídeos e informação
+            sobre onde vivem.
+          </p>
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-6xl px-5 py-14">
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {dados.grupos.map((grupo) => {
+            const total = dados.mapa[grupo.slug] || 0;
+            return (
+              <Link
+                key={grupo.id}
+                to={`/animais/${grupo.slug}`}
+                className="card-lift group flex flex-col overflow-hidden"
+              >
+                <div className="relative h-44 w-full overflow-hidden bg-muted">
+                  {grupo.imagem_url ? (
+                    <Image
+                      src={grupo.imagem_url}
+                      alt={grupo.nome}
+                      className="block h-full w-full transition-transform duration-700 group-hover:scale-[1.05]"
+                    />
+                  ) : (
+                    <div className="flex h-full w-full items-center justify-center bg-primary/5">
+                      <PawPrint className="h-8 w-8 text-primary/30" />
+                    </div>
+                  )}
+                  <span className="absolute left-4 top-4 rounded-full bg-background/90 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-primary backdrop-blur">
+                    {total} {total === 1 ? "espécie" : "espécies"}
+                  </span>
+                </div>
+                <div className="flex flex-1 flex-col p-6">
+                  <h2 className="font-heading text-xl font-semibold">{grupo.nome}</h2>
+                  <p className="mt-2 flex-1 text-sm leading-relaxed text-foreground/70">
+                    {grupo.resumo}
+                  </p>
+                  <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-primary">
+                    Entrar no grupo
+                    <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1" />
+                  </span>
+                </div>
+              </Link>
+            );
+          })}
+        </div>
+      </section>
+    </div>
+  );
+}
