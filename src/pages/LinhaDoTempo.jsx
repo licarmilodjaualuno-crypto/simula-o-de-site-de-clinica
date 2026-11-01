@@ -1,12 +1,80 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { base44 } from "@/api/base44Client";
+import TimelineEvento from "@/components/TimelineEvento";
+import LoadingBlock from "@/components/LoadingBlock";
 
-const eras=[
-  {periodo:"Antes do século XV",nome:"Sociedades e reinos da região",texto:"Muito antes da chegada dos europeus, a região que hoje corresponde à Guiné-Bissau era habitada por diferentes povos, com formas próprias de organização política, agricultura, comércio, religião e vida comunitária. A área mantinha relações com redes comerciais do interior da África Ocidental e com espaços ligados ao antigo mundo mandinga."},
-  {periodo:"Séculos XV–XIX",nome:"Contato atlântico e presença portuguesa",texto:"A partir do século XV, navegadores e comerciantes portugueses passaram a frequentar a costa. O contato não significou domínio imediato do território. Durante séculos, o comércio costeiro conviveu com poderes africanos locais e com profundas transformações provocadas pelo tráfico atlântico de pessoas escravizadas."},
-  {periodo:"Século XIX–início do XX",nome:"Consolidação colonial",texto:"No século XIX, Portugal intensificou a tentativa de controlar diretamente o território. A ocupação colonial encontrou resistência de diferentes comunidades e só se consolidou de forma desigual ao longo das primeiras décadas do século XX."},
-  {periodo:"1956–1973",nome:"Luta de libertação",texto:"Em 1956 foi criado o PAIGC, ligado a Amílcar Cabral e outros dirigentes. A mobilização política evoluiu para uma guerra de libertação. O movimento construiu estruturas administrativas em zonas sob seu controlo e ganhou reconhecimento internacional."},
-  {periodo:"24 de setembro de 1973",nome:"Proclamação da independência",texto:"A independência da Guiné-Bissau foi proclamada em 24 de setembro de 1973. Portugal reconheceu oficialmente a independência em 10 de setembro de 1974, após a Revolução dos Cravos e a mudança política portuguesa."},
-  {periodo:"1974–presente",nome:"Construção do Estado e vida contemporânea",texto:"Desde a independência, o país atravessou períodos de reformas, tensões políticas, golpes de Estado, guerra civil e processos eleitorais. Ao mesmo tempo, a sociedade guineense preserva uma vida cultural muito rica, marcada por línguas, músicas, religiões, tradições e fortes redes comunitárias."}
-];
+const BARRA = {
+  ocre: "bg-tom-ocre",
+  azul: "bg-tom-azul",
+  verde: "bg-tom-verde",
+  vermelho: "bg-tom-vermelho",
+};
 
-export default function LinhaDoTempo(){return <div className="mx-auto max-w-4xl px-5 py-14 sm:py-20"><header className="max-w-2xl"><p className="text-[11px] font-medium uppercase tracking-[0.28em] text-primary">História</p><h1 className="mt-4 font-heading text-4xl font-semibold leading-tight sm:text-5xl">A história da Guiné-Bissau</h1><p className="mt-5 leading-relaxed text-foreground/70">Uma viagem pelas sociedades antigas, pelo período atlântico e colonial, pela luta de libertação, pela independência e pela construção do país contemporâneo.</p></header><div className="mt-12 space-y-6">{eras.map((era,i)=><article key={era.nome} className="rounded-2xl border border-border bg-card p-6 sm:p-8"><div className="flex gap-5"><div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary font-heading font-semibold text-primary-foreground">{i+1}</div><div><p className="text-[11px] font-semibold uppercase tracking-[.18em] text-secondary">{era.periodo}</p><h2 className="mt-2 font-heading text-2xl font-semibold">{era.nome}</h2><p className="mt-4 leading-7 text-foreground/75">{era.texto}</p></div></div></article>)}</div></div>}
+export default function LinhaDoTempo() {
+  const [dados, setDados] = useState(null);
+
+  useEffect(() => {
+    let ativo = true;
+
+    const carregar = async () => {
+      const [eras, eventos] = await Promise.all([
+        base44.entities.Era.list("ordem", 20),
+        base44.entities.Evento.list("ano", 300),
+      ]);
+      if (!ativo) return;
+      setDados({ eras, eventos });
+    };
+
+    carregar();
+    return () => {
+      ativo = false;
+    };
+  }, []);
+
+  if (!dados) return <LoadingBlock label="A ordenar séculos de história" />;
+
+  return (
+    <div className="mx-auto max-w-4xl px-5 py-14 sm:py-20">
+      <header className="max-w-2xl">
+        <p className="text-[11px] font-medium uppercase tracking-[0.28em] text-primary">Cronologia</p>
+        <h1 className="mt-4 text-balance font-heading text-4xl font-semibold leading-tight sm:text-5xl">
+          A linha do tempo da Guiné-Bissau
+        </h1>
+        <p className="mt-5 leading-relaxed text-foreground/70">
+          Dos reinos antigos e do comércio atlântico à luta de libertação, à independência de 1973 e
+          ao país de hoje. Percurso cronológico por {dados.eventos.length} acontecimentos.
+        </p>
+      </header>
+
+      {dados.eras.map((era) => {
+        const lista = dados.eventos.filter((evento) => evento.era_id === era.id);
+        if (!lista.length) return null;
+
+        return (
+          <section key={era.id} className="mt-16">
+            <div className="mb-7">
+              <span className={`block h-1 w-16 ${BARRA[era.tom] || BARRA.ocre}`} />
+              <p className="mt-5 text-[11px] font-medium uppercase tracking-[0.2em] text-muted-foreground">
+                {era.periodo}
+              </p>
+              <h2 className="mt-2 font-heading text-2xl font-semibold sm:text-3xl">{era.nome}</h2>
+              <p className="mt-3 max-w-2xl leading-relaxed text-foreground/70">{era.resumo}</p>
+              <Link
+                to={`/era/${era.id}`}
+                className="mt-4 inline-block text-sm font-medium text-primary hover:underline"
+              >
+                Ler esta era em detalhe
+              </Link>
+            </div>
+            <ol>
+              {lista.map((evento) => (
+                <TimelineEvento key={evento.id} evento={evento} />
+              ))}
+            </ol>
+          </section>
+        );
+      })}
+    </div>
+  );
+}
