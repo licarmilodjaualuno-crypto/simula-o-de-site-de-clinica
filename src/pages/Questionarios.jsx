@@ -49,7 +49,9 @@ export default function Questionarios() {
   return (
     <div className="mx-auto max-w-6xl px-5 py-14 sm:py-20">
       <header className="max-w-2xl">
-        <p className="text-[11px] font-medium uppercase tracking-[0.28em] text-primary">Estudo</p>
+        <p className="text-[11px] font-medium uppercase tracking-[0.28em] text-primary">
+          Estudo
+        </p>
         <h1 className="mt-4 text-balance font-heading text-4xl font-semibold leading-tight sm:text-5xl">
           Questionários de história
         </h1>
@@ -75,7 +77,9 @@ export default function Questionarios() {
             <h2 className="mt-2 font-heading text-xl font-semibold leading-snug">{era.nome}</h2>
             <p className="mt-3 flex-1 text-sm leading-relaxed text-foreground/70">{era.resumo}</p>
             <span className="mt-5 flex items-center justify-between text-sm">
-              <span className="text-muted-foreground">{dados.contagens[era.nome]} perguntas</span>
+              <span className="text-muted-foreground">
+                {dados.contagens[era.nome]} perguntas
+              </span>
               <span className="inline-flex items-center gap-1.5 font-medium text-primary">
                 Começar
                 <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1" />
@@ -95,11 +99,16 @@ export default function Questionarios() {
           ) : (
             <ul className="mt-6 divide-y divide-border border-y border-border">
               {dados.resultados.map((resultado) => (
-                <li key={resultado.id} className="flex flex-wrap items-center justify-between gap-2 py-4">
+                <li
+                  key={resultado.id}
+                  className="flex flex-wrap items-center justify-between gap-2 py-4"
+                >
                   <span className="font-medium">{resultado.categoria}</span>
                   <span className="flex items-center gap-4 text-sm text-muted-foreground">
                     <span>
-                      <span className="font-heading text-lg font-semibold text-primary">{resultado.acertos}</span>
+                      <span className="font-heading text-lg font-semibold text-primary">
+                        {resultado.acertos}
+                      </span>
                       /{resultado.total}
                     </span>
                     <span>{new Date(resultado.created_date).toLocaleDateString("pt-PT")}</span>

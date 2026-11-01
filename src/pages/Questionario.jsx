@@ -51,7 +51,9 @@ export default function Questionario() {
         Todos os questionários
       </Link>
 
-      <p className="mt-8 text-[11px] font-medium uppercase tracking-[0.28em] text-primary">Questionário</p>
+      <p className="mt-8 text-[11px] font-medium uppercase tracking-[0.28em] text-primary">
+        Questionário
+      </p>
       <h1 className="mt-4 text-balance font-heading text-3xl font-semibold leading-tight sm:text-4xl">
         {nome}
       </h1>

@@ -33,7 +33,9 @@ export default function Monumentos() {
   return (
     <div className="mx-auto max-w-6xl px-5 py-14 sm:py-20">
       <header className="max-w-2xl">
-        <p className="text-[11px] font-medium uppercase tracking-[0.28em] text-primary">Património</p>
+        <p className="text-[11px] font-medium uppercase tracking-[0.28em] text-primary">
+          Património
+        </p>
         <h1 className="mt-4 text-balance font-heading text-4xl font-semibold leading-tight sm:text-5xl">
           Monumentos históricos
         </h1>

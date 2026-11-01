@@ -42,7 +42,9 @@ export default function Temas() {
   return (
     <div className="mx-auto max-w-6xl px-5 py-14 sm:py-20">
       <header className="max-w-2xl">
-        <p className="text-[11px] font-medium uppercase tracking-[0.28em] text-primary">Enciclopédia</p>
+        <p className="text-[11px] font-medium uppercase tracking-[0.28em] text-primary">
+          Enciclopédia
+        </p>
         <h1 className="mt-4 text-balance font-heading text-4xl font-semibold leading-tight sm:text-5xl">
           Temas da história e da cultura
         </h1>
@@ -82,7 +84,9 @@ export default function Temas() {
       </div>
 
       {visiveis.length === 0 ? (
-        <p className="mt-16 text-center text-foreground/60">Nenhum tema encontrado. Tente outra palavra.</p>
+        <p className="mt-16 text-center text-foreground/60">
+          Nenhum tema encontrado. Tente outra palavra.
+        </p>
       ) : (
         <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {visiveis.map((tema) => (

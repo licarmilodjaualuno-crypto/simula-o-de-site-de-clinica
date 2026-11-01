@@ -32,7 +32,9 @@ export default function SiteHeader() {
             <Star className="h-4 w-4 text-gold" fill="currentColor" strokeWidth={0} />
           </span>
           <span className="leading-tight">
-            <span className="block font-heading text-[18px] font-semibold tracking-tight">Memória Viva</span>
+            <span className="block font-heading text-[18px] font-semibold tracking-tight">
+              Memória Viva
+            </span>
             <span className="hidden text-[10px] font-medium uppercase tracking-[0.24em] text-muted-foreground sm:block">
               Guiné-Bissau
             </span>

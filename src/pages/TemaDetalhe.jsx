@@ -92,12 +92,15 @@ export default function TemaDetalhe() {
         {tema.resumo && (
           <p className="font-heading text-[21px] leading-[1.6] text-foreground/85">{tema.resumo}</p>
         )}
+
         <span className="mt-10 block h-px w-16 bg-gold" />
+
         {tema.citacao && (
           <blockquote className="my-10 border-l-2 border-primary pl-6 font-heading text-[24px] leading-snug text-foreground">
             {tema.citacao}
           </blockquote>
         )}
+
         <Prose className="mt-8">{tema.conteudo}</Prose>
       </div>
 
